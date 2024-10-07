@@ -1,0 +1,103 @@
+<div *ngIf="episodeDetail" class="max-w-6xl mx-auto p-8 bg-gray-50 shadow-lg rounded-lg space-y-6">
+  <div class="flex justify-between items-start mb-6">
+    <div>
+      <h1 class="text-5xl font-bold text-gray-900 mb-2">{{ episodeDetail.title }}</h1>
+      <h2 class="text-lg text-gray-600">
+        Saison {{ episodeDetail.season }}, Épisode {{ episodeDetail.episode }}
+      </h2>
+    </div>
+    <div class="flex flex-col items-center">
+      <button (click)="toggleWatchedStatus(episodeDetail.id)"
+        class="flex items-center justify-center w-14 h-14 bg-white border-2 border-black text-gray-800 font-semibold rounded-full shadow hover:bg-gray-200 transition duration-300 ease-in-out">
+        <span *ngIf="!watched" class="text-4xl">&#9744;</span>
+        <span *ngIf="watched">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </span>
+      </button>
+      <p class="mt-2 text-gray-600">Vu</p>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <p class="text-gray-800">
+      <strong>Description:</strong> {{ episodeDetail.description }}
+    </p>
+    <p class="text-gray-800">
+      <strong>Date de diffusion:</strong> {{ episodeDetail.date | date:'longDate' }}
+    </p>
+    <p class="text-gray-800">
+      <strong>Directeur:</strong> {{ episodeDetail.director }}
+    </p>
+  </div>
+
+  <div>
+    <h3 class="text-3xl font-semibold text-gray-900 mb-4">Acteurs:</h3>
+    <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <li *ngFor="let character of (showAllActors ? episodeDetail.characters : episodeDetail.characters.slice(0, 6))"
+          class="flex items-center bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-200">
+        <img *ngIf="character.picture" [src]="character.picture" alt="{{ character.name }}"
+            class="w-20 h-20 rounded-full mr-4 shadow-md object-cover">
+        <div>
+          <p class="font-bold text-gray-900 text-lg">{{ character.name }}</p>
+          <p class="text-gray-700">{{ character.actor }}</p>
+        </div>
+      </li>
+    </ul>
+    <div class="flex justify-center mt-6">
+      <button (click)="toggleShowAllActors()"
+          class="text-lg border-2 border-gray-800 hover:bg-gray-800 hover:text-white p-2 rounded-full px-6 transition-all duration-200">
+          {{ showAllActors ? 'Voir moins' : 'Voir tous' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <h3 class="text-3xl font-semibold text-gray-900 mt-8 mb-4">Équipe de production:</h3>
+    <p class="text-gray-800">
+      <strong>Writers:</strong> {{ episodeDetail.writers.join(', ') }}
+    </p>
+    <p class="text-gray-800">
+      <strong>Directeurs:</strong> {{ episodeDetail.crew.directors[0]?.name }}
+    </p>
+  </div>
+
+  <div>
+    <h3 class="text-3xl font-semibold text-gray-900 mt-8 mb-4">Commentaires:</h3>
+    <form [formGroup]="commentForm" (ngSubmit)="onSubmitComment()"
+        class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md space-y-4">
+      <div>
+        <label for="commentText" class="block text-gray-700 text-sm font-bold mb-2">Écrivez votre commentaire ici:</label>
+        <textarea id="commentText" formControlName="commentText" rows="4" placeholder="Votre commentaire..."
+                  class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+        <div *ngIf="commentForm.get('commentText')?.invalid && (commentForm.get('commentText')?.dirty || commentForm.get('commentText')?.touched)">
+          <small *ngIf="commentForm.get('commentText')?.errors?.['required']" class="text-red-600 text-xs italic">Le commentaire est requis.</small>
+        </div>
+      </div>
+      <button type="submit" [disabled]="commentForm.invalid"
+              class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 disabled:opacity-50 transition-colors">
+        Poster le commentaire
+      </button>
+    </form>
+  </div>
+
+  <div *ngIf="comments && comments.length > 0" class="space-y-4 mt-6">
+    <div *ngFor="let comment of comments" class="flex items-start bg-gray-100 p-4 rounded-lg shadow">
+      <img *ngIf="comment.avatar" [src]="comment.avatar" alt="{{ comment.login }}" class="w-12 h-12 rounded-full mr-4">
+      <div>
+        <div class="flex justify-between">
+          <p class="font-bold text-gray-800">{{ comment.login }}</p>
+          <p class="text-gray-600 text-sm">{{ comment.date | date:'short' }}</p>
+        </div>
+        <p class="text-gray-700 mt-1">{{ comment.text }}</p>
+        <div class="mt-2">
+          <span class="text-yellow-500 font-bold">{{ comment.user_note }} ★</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #noComments>
+    <p class="text-gray-500">Aucun commentaire pour cet épisode.</p>
+  </ng-template>
+</div>

@@ -1,0 +1,84 @@
+<div *ngIf="series" class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg space-y-6">
+  <h1 class="text-4xl font-bold mb-4 text-gray-800 border-b-2 pb-2">{{ series.title }} ({{ series.creation }})</h1>
+
+  <div class="flex flex-col md:flex-row md:space-x-6 space-y-4 md:space-y-0">
+    <img [src]="series.images.poster" alt="{{ series.title }} poster" class="w-64 rounded-lg shadow-md">
+    <div class="flex-grow">
+      <table class="w-full table-auto border-collapse">
+        <tbody>
+          <tr class="bg-gray-50">
+            <td class="font-semibold p-2 border-b">Genre:</td>
+            <td class="p-2 border-b">
+              <span class="text-blue-600">{{ getGenres(series.genres) }}</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="font-semibold p-2 border-b">Saisons:</td>
+            <td class="p-2 border-b">
+              <span class="text-blue-600">{{ series.seasons }}</span>
+            </td>
+          </tr>
+          <tr class="bg-gray-50">
+            <td class="font-semibold p-2 border-b">Épisodes:</td>
+            <td class="p-2 border-b">
+              <span class="text-blue-600">{{ series.episodes }}</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="font-semibold p-2 border-b">Durée:</td>
+            <td class="p-2 border-b">
+              <span class="text-blue-600">{{ series.length }} min</span>
+            </td>
+          </tr>
+          <tr class="bg-gray-50">
+            <td class="font-semibold p-2 border-b">Notes:</td>
+            <td class="p-2 border-b">
+              <span class="text-blue-600">{{ series.notes.mean }} / 5</span>
+            </td>
+          </tr>
+          <tr class="bg-gray-50">
+            <td class="font-semibold p-2 border-b">Plateformes disponibles</td>
+            <td class="p-2 border-b">
+              <span class="text-blue-600" *ngFor="let platform of series.platforms.svods">
+                <a [href]="platform.link_url" target="_blank" class="text-blue-600 mr-3 hover:underline">
+                  {{ platform.name }}
+                </a>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p class="text-lg mb-4 text-gray-700 leading-relaxed">{{ series.description }}</p>
+
+  <!-- <h2 class="text-2xl font-semibold mb-4 text-gray-800">Plateformes disponibles</h2>
+  <div *ngFor="let platform of series.platforms.svods" class="mb-2">
+    <a [href]="platform.link_url" target="_blank" class="text-blue-600 hover:underline">
+      {{ platform.name }}
+    </a>
+  </div> -->
+
+  <div *ngIf="seasons">
+    <h3 class="text-2xl font-semibold mb-6 border-b-2 pb-2 text-gray-800">Saisons:</h3>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div *ngFor="let season of seasons" class="flex flex-col items-center space-y-2 cursor-pointer transform transition-transform hover:scale-105"
+        (click)="loadEpisodes(series.id, season.number)">
+        <img [src]="season.image || 'assets/placeholder.png'" alt="Season image"
+          class="w-28 h-44 object-cover rounded-lg shadow-lg" />
+        <h4 class="text-lg font-medium text-center">Saison {{ season.number }}</h4>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="episodes.length > 0">
+    <h3 class="text-2xl font-semibold mt-6 border-b-2 pb-2 mb-6 text-gray-800">Épisodes:</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-2">
+      <a [routerLink]="['/movie', showId, episode.id]" *ngFor="let episode of episodes"
+        class="bg-green-600 text-white shadow-lg rounded-lg p-4 hover:bg-green-700 transition-colors">
+        <h5 class="text-lg font-medium">Épisode {{ episode.episode }}</h5>
+      </a>
+    </div>
+  </div>
+</div>

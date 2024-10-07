@@ -1,0 +1,68 @@
+<div *ngIf="profile" class="flex flex-col items-center bg-gray-50 min-h-screen p-4 relative">
+
+  <div class="relative justify-center-full max-w-3xl">
+    <img [src]="profile.member.avatar" alt="Avatar de {{ profile.member.login }}" class="h-20 rounded-full border-4 border-white shadow-lg">
+  </div>
+  <button (click)="logout()" class="bg-red-700 mt-3 p-2 text-white rounded">Logout</button>
+
+
+
+    <!-- Informations du profil sous la bannière -->
+    <div class="bg-white shadow-md rounded-b-lg p-4 w-full max-w-3xl mt-6 text-center space-y-2">
+        <div class="flex flex-col items-center">
+            <h2 class="text-2xl font-bold text-gray-800">{{ profile.member.login }}</h2>
+            <p class="text-blue-500 font-medium">{{ profile.member.xp }} XP</p>
+        </div>
+
+        <!-- Progression et statistiques -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
+            <!-- Progression -->
+            <div class="bg-gray-100 p-4 rounded-lg">
+                <h3 class="text-lg font-semibold text-gray-800">Progression</h3>
+                <p>{{ profile.member.stats.progress }}% d'avancement</p>
+                <p>{{ profile.member.stats.shows }} Séries</p>
+                <p>{{ profile.member.stats.episodes }} Épisodes</p>
+                <p>{{ profile.member.stats.movies }} Films</p>
+            </div>
+
+            <!-- Statistiques -->
+            <div class="bg-gray-100 p-4 rounded-lg">
+                <h3 class="text-lg font-semibold text-gray-800">Statistiques</h3>
+                <p>Amis: <span class="font-semibold">{{ profile.member.stats.friends }}</span></p>
+                <p>Séries suivies: <span class="font-semibold">{{ profile.member.stats.shows }}</span></p>
+                <p>Épisodes vus: <span class="font-semibold">{{ profile.member.stats.episodes }}</span></p>
+                <p>Films vus: <span class="font-semibold">{{ profile.member.stats.movies }}</span></p>
+                <p>Commentaires: <span class="font-semibold">{{ profile.member.stats.comments }}</span></p>
+                <p>Jour préféré: <span class="font-semibold">{{ profile.member.stats.favorite_day }}</span></p>
+                <p>Genre préféré: <span class="font-semibold">{{ profile.member.stats.favorite_genre }}</span></p>
+            </div>
+        </div>
+
+        <!-- Séries regardées -->
+        <div *ngIf="shows.length > 0" class="mt-6">
+            <h3 class="text-lg font-semibold text-gray-800">Séries regardées :</h3>
+
+            <div class="flex flex-wrap">
+                <div *ngFor="let show of shows" class="relative flex-shrink-0 w-1/4 p-2 group">
+                    <a [routerLink]="['/movie', show.id]">
+                        <img [src]="show.images.poster || 'assets/placeholder.png'" alt="{{show.slug}}"
+                            class="w-full h-auto">
+                    </a>
+                    <!-- Bouton Delete qui n'apparaît qu'au survol -->
+                    <button (click)="delete_Show(show.id)"
+                        class="absolute top-2 right-2 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-100">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </div>
+
+
+
+
+
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
